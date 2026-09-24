@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MiniChat</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- AUTH -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <h1>💬 MiniChat</h1>
+      <p class="sub" id="auth-subtitle">Melde dich an, um zu chatten</p>
+      <div class="auth-error" id="auth-error"></div>
+
+      <form id="login-form">
+        <input type="text" id="login-username" placeholder="Nutzername" autocomplete="username" required />
+        <input type="password" id="login-password" placeholder="Passwort" autocomplete="current-password" required />
+        <button type="submit" class="primary">Anmelden</button>
+      </form>
+
+      <form id="register-form" class="hidden">
+        <input type="text" id="register-username" placeholder="Nutzername" required />
+        <input type="text" id="register-displayname" placeholder="Anzeigename (optional)" />
+        <input type="password" id="register-password" placeholder="Passwort (min. 6 Zeichen)" required />
+        <button type="submit" class="primary">Konto erstellen</button>
+      </form>
+
+      <div class="auth-toggle">
+        <span id="toggle-to-register">Noch kein Konto? <a>Registrieren</a></span>
+        <span id="toggle-to-login" class="hidden">Schon ein Konto? <a>Anmelden</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-screen" class="hidden">
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <div class="who" id="open-profile">
+          <div class="avatar" id="my-avatar">?</div>
+          <div>
+            <div style="font-weight:600;" id="my-name">...</div>
+            <div style="font-size:11px; opacity:0.8;">Online</div>
+          </div>
+        </div>
+        <button id="logout-btn" title="Abmelden">⎋</button>
+      </div>
+      <div id="sidebar-actions">
+        <button id="btn-add-friend">➕ Freund</button>
+        <button id="btn-create-group">👥 Gruppe</button>
+        <button id="btn-join-group">🔑 Beitreten</button>
+      </div>
+      <div id="room-list"></div>
+    </div>
+
+    <div id="chat-panel">
+      <div id="chat-placeholder">Wähle einen Chat aus oder füge einen Freund hinzu 👋</div>
+      <div id="chat-view" class="hidden" style="display:flex; flex-direction:column; height:100%;">
+        <div id="chat-header">
+          <button class="back" id="btn-back">←</button>
+          <div class="avatar" id="chat-avatar">?</div>
+          <div>
+            <div class="title" id="chat-title">...</div>
+            <div class="sub" id="chat-sub"></div>
+          </div>
+          <div class="code-pill hidden" id="chat-code-pill"></div>
+        </div>
+        <div id="messages"></div>
+        <div id="composer">
+          <button class="icon-btn" id="btn-sticker" title="Sticker">😊</button>
+          <button class="icon-btn" id="btn-attach" title="Datei / Bild / GIF senden">📎</button>
+          <input type="file" id="file-input" class="hidden" accept="image/*,.gif" />
+          <input type="text" id="text-input" placeholder="Nachricht schreiben..." autocomplete="off" />
+          <button class="send-btn" id="btn-send">➤</button>
+          <div id="sticker-panel" class="hidden"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic modal container -->
+  <div id="modal-root"></div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
