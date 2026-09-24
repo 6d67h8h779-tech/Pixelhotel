@@ -241,19 +241,33 @@ nav.visible { transform: translateY(0); }
   overflow: hidden;
   perspective: 1500px;
 }
-#hero-canvas {
+.hero-photo {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.42) saturate(0.85) contrast(1.05);
+  transform: scale(1.05);
+  animation: heroKen 22s ease-out infinite alternate;
+}
+@keyframes heroKen {
+  from { transform: scale(1.05) translate(0, 0); }
+  to   { transform: scale(1.15) translate(-2%, -1%); }
 }
 .hero-bg-radial {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
-    radial-gradient(ellipse at 20% 30%, rgba(200,161,90,0.18) 0%, transparent 40%),
-    radial-gradient(ellipse at 80% 70%, rgba(124,58,46,0.12) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, var(--navy-mid) 0%, var(--navy-deep) 70%);
-  z-index: 0;
+    radial-gradient(ellipse at 20% 30%, rgba(200,161,90,0.14) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 70%, rgba(124,58,46,0.10) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(7,10,26,0.55) 0%, rgba(7,10,26,0.35) 40%, rgba(7,10,26,0.85) 100%);
 }
 .hero-grain {
   position: absolute;
@@ -414,6 +428,165 @@ section {
   overflow: hidden;
 }
 @media (max-width: 900px) { section { padding: 100px 20px; } }
+
+/* ══════════════════════════════════════════════════════
+   CHAPTER HERO — full-bleed image band on top of each chapter
+   ══════════════════════════════════════════════════════ */
+.chapter-hero {
+  position: relative;
+  height: 60vh;
+  min-height: 420px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: -160px;
+  margin-bottom: 100px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 60px 40px;
+  color: #fff;
+}
+.chapter-hero-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.chapter-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5) saturate(0.9) contrast(1.05);
+  transform: scale(1.05);
+  transition: transform 0.6s ease-out;
+}
+.chapter-hero:hover .chapter-hero-img img { transform: scale(1.02); }
+.chapter-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7,10,26,0.3) 0%, rgba(7,10,26,0.55) 60%, var(--navy-deep) 100%);
+  z-index: 1;
+}
+.section-light .chapter-hero::after {
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.55) 60%, var(--off-white) 100%);
+}
+.chapter-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+.chapter-hero-kicker {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  margin-bottom: 20px;
+}
+.chapter-hero-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(40px, 6vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  max-width: 900px;
+}
+.chapter-hero-title .italic {
+  font-style: italic;
+  font-family: var(--serif);
+  color: var(--gold-lt);
+  font-weight: 400;
+}
+@media (max-width: 900px) {
+  .chapter-hero {
+    height: 50vh;
+    min-height: 340px;
+    margin-top: -100px;
+    margin-bottom: 60px;
+    padding: 40px 20px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   IMAGE BAND — big full-bleed image between sections
+   ══════════════════════════════════════════════════════ */
+.image-band {
+  position: relative;
+  height: 70vh;
+  min-height: 420px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+.image-band img {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  position: absolute;
+  top: -10%;
+  left: 0;
+  filter: brightness(0.6) saturate(0.9);
+}
+.image-band-caption {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  z-index: 2;
+  color: #fff;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 2.5vw, 32px);
+  max-width: 800px;
+  line-height: 1.35;
+}
+.image-band-caption small {
+  display: block;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  margin-top: 16px;
+}
+.image-band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7,10,26,0.4) 0%, rgba(7,10,26,0.1) 40%, rgba(7,10,26,0.9) 100%);
+  z-index: 1;
+}
+
+/* Real photo inside a card */
+.real-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  aspect-ratio: 4/3;
+}
+.real-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out-expo);
+}
+.real-photo:hover img { transform: scale(1.06); }
+.real-photo-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 24px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  color: #fff;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  z-index: 2;
+}
 
 .container {
   max-width: 1280px;
@@ -1564,8 +1737,14 @@ footer {
 
 <!-- ════════ HERO ════════ -->
 <section class="hero" id="hero">
+  <div class="hero-photo">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Hildesheim_Marktplatz_Panorama.jpg/1920px-Hildesheim_Marktplatz_Panorama.jpg"
+      onerror="this.onerror=null; this.src='https://source.unsplash.com/1600x1200/?hildesheim,germany,historic';"
+      alt="Hildesheim Marktplatz"
+    />
+  </div>
   <div class="hero-bg-radial"></div>
-  <canvas id="hero-canvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-grain"></div>
 
@@ -1681,8 +1860,20 @@ footer {
 <!-- ════════ 1 · GESCHICHTE ════════ -->
 <section id="geschichte">
   <div class="container">
-    <div class="chapter-num reveal">Kapitel Eins</div>
-    <h2 class="section-title reveal">Geschichte der<br/><span class="italic">jüdischen Gemeinde</span></h2>
+    <div class="chapter-hero">
+      <div class="chapter-hero-img">
+        <img
+          src="https://source.unsplash.com/1600x900/?medieval,manuscript,parchment"
+          onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-geschichte/1600/900';"
+          alt="Mittelalterliche Handschrift"
+          loading="lazy"
+        />
+      </div>
+      <div class="chapter-hero-inner">
+        <div class="chapter-hero-kicker">Kapitel Eins</div>
+        <h2 class="chapter-hero-title">Geschichte der<br/><span class="italic">jüdischen Gemeinde</span></h2>
+      </div>
+    </div>
     <p class="section-lead reveal">Die Ursprünge reichen ins Mittelalter zurück. Zwischen Pogromen, Vertreibung, Schutzbriefen und Emanzipation entstand eine Gemeinde, die im 19. Jahrhundert zu vollständigen Bürgerrechten gelangte.</p>
 
     <div class="timeline-wrap">
@@ -1758,8 +1949,17 @@ footer {
     <div class="synagoge-scroller">
       <div class="synagoge-visual">
         <div class="synagoge-visual-inner">
-          <!-- Detailed SVG illustration of the octagonal synagogue -->
-          <svg class="synagoge-illustration" viewBox="0 0 500 620" xmlns="http://www.w3.org/2000/svg" id="synagogeSvg">
+          <div class="real-photo" style="aspect-ratio: 3/4; height: 100%; box-shadow: 0 40px 80px rgba(0,0,0,0.35);">
+            <img
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Synagoge_Hildesheim.jpg?width=900"
+              onerror="this.onerror=null; this.src='https://source.unsplash.com/900x1200/?synagogue,historic,architecture';"
+              alt="Historische Aufnahme der Synagoge am Lappenberg, Hildesheim, vor 1938"
+              loading="lazy"
+            />
+            <div class="real-photo-caption">Die Synagoge am Lappenberg — vor der Zerstörung 1938 · Foto: Stadtarchiv Hildesheim</div>
+          </div>
+          <!-- Detailed SVG illustration of the octagonal synagogue (fallback / decorative) -->
+          <svg class="synagoge-illustration" viewBox="0 0 500 620" xmlns="http://www.w3.org/2000/svg" id="synagogeSvg" style="display:none;">
             <defs>
               <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#e5dcc4"/>
@@ -2157,8 +2357,21 @@ footer {
 <!-- ════════ 5 · VERFOLGUNG ════════ -->
 <section id="verfolgung">
   <div class="container">
-    <div class="chapter-num reveal">Kapitel Fünf</div>
-    <h2 class="section-title reveal">Verfolgung<br/><span class="italic">und Ausgrenzung</span></h2>
+    <div class="chapter-hero">
+      <div class="chapter-hero-img">
+        <img
+          src="https://source.unsplash.com/1600x900/?dark,shadow,barbed-wire"
+          onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-verfolgung/1600/900';"
+          alt="Schatten und Stacheldraht"
+          loading="lazy"
+          style="filter: brightness(0.42) saturate(0.4) contrast(1.15);"
+        />
+      </div>
+      <div class="chapter-hero-inner">
+        <div class="chapter-hero-kicker">Kapitel Fünf</div>
+        <h2 class="chapter-hero-title">Verfolgung<br/><span class="italic">und Ausgrenzung</span></h2>
+      </div>
+    </div>
     <p class="section-lead reveal">Zwischen 1933 und 1938 wird jede jüdische Existenz in Hildesheim Schritt für Schritt zerstört — durch Gesetze, Boykotte, Enteignungen und offenen Terror.</p>
 
     <div class="persecution">
@@ -2215,8 +2428,21 @@ footer {
 <section id="pogromnacht" class="section-blood pogrom">
   <div class="pogrom-embers" id="pogromEmbers"></div>
   <div class="container pogrom-content">
-    <div class="chapter-num reveal" style="color: var(--accent-red);">Kapitel Sechs · 9. November 1938</div>
-    <h2 class="section-title reveal">Die<br/><span class="italic">Pogromnacht</span></h2>
+    <div class="chapter-hero">
+      <div class="chapter-hero-img">
+        <img
+          src="https://source.unsplash.com/1600x900/?fire,burning,ashes,night"
+          onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-pogrom/1600/900';"
+          alt="Brennende Ruine"
+          loading="lazy"
+          style="filter: brightness(0.4) saturate(1.3) contrast(1.1) hue-rotate(-10deg);"
+        />
+      </div>
+      <div class="chapter-hero-inner">
+        <div class="chapter-hero-kicker" style="color: #ff8a6a;">Kapitel Sechs · 9. November 1938</div>
+        <h2 class="chapter-hero-title">Die<br/><span class="italic">Pogromnacht</span></h2>
+      </div>
+    </div>
 
     <div class="pogrom-quote reveal">
       „Die Synagoge sofort niederbrennen."
@@ -2317,11 +2543,37 @@ footer {
   </div>
 </section>
 
+<!-- ════════ IMAGE BAND · after Ch7 · cinematic transition ════════ -->
+<section class="image-band" style="padding:0;">
+  <img
+    src="https://source.unsplash.com/1600x900/?candles,memorial,darkness"
+    onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-band-1/1600/900';"
+    alt="Kerzen im Dunkel"
+    loading="lazy"
+  />
+  <div class="image-band-caption">
+    „Ihre Namen sind verloren, wenn wir sie nicht sprechen."
+    <small>Aus dem Gedenkgottesdienst zur Pogromnacht 2018</small>
+  </div>
+</section>
+
 <!-- ════════ 8 · STOLPERSTEINE ════════ -->
 <section id="stolpersteine" class="section-light">
   <div class="container">
-    <div class="chapter-num center reveal">Kapitel Acht</div>
-    <h2 class="section-title reveal" style="text-align:center;">Stolpersteine<br/><span class="italic">Steine des Gedenkens</span></h2>
+    <div class="chapter-hero">
+      <div class="chapter-hero-img">
+        <img
+          src="https://source.unsplash.com/1600x900/?cobblestone,brass,plaque"
+          onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-stolpersteine/1600/900';"
+          alt="Stolperstein auf Kopfsteinpflaster"
+          loading="lazy"
+        />
+      </div>
+      <div class="chapter-hero-inner" style="text-align:center;">
+        <div class="chapter-hero-kicker" style="justify-content:center;">Kapitel Acht</div>
+        <h2 class="chapter-hero-title" style="margin: 0 auto;">Stolpersteine<br/><span class="italic">Steine des Gedenkens</span></h2>
+      </div>
+    </div>
 
     <div class="stolper-hero reveal">
       <div class="stolper-count">330<span class="stolper-count-plus">+</span></div>
@@ -2432,8 +2684,15 @@ footer {
 
     <div class="mahnmal-split">
       <div class="mahnmal-visual reveal-left">
-        <!-- Detailed SVG illustration of the memorial -->
-        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; display:block;">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Synagogen-Mahnmal_Hildesheim.jpg?width=900"
+          onerror="this.onerror=null; this.src='https://source.unsplash.com/900x1200/?memorial,stone,monument';"
+          alt="Synagogenmahnmal Lappenberg Hildesheim, 1988"
+          loading="lazy"
+          style="width:100%; height:100%; object-fit:cover; display:block; position:absolute; inset:0;"
+        />
+        <!-- SVG kept as offscreen fallback for zero-image scenarios -->
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="display:none;">
           <defs>
             <linearGradient id="skyMg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#e2dcc8"/>
@@ -2545,8 +2804,21 @@ footer {
 <!-- ════════ 10 · NEUBEGINN ════════ -->
 <section id="neubeginn">
   <div class="container">
-    <div class="chapter-num reveal">Kapitel Zehn</div>
-    <h2 class="section-title reveal">Neubeginn<br/><span class="italic">Die Gemeinde heute</span></h2>
+    <div class="chapter-hero">
+      <div class="chapter-hero-img">
+        <img
+          src="https://source.unsplash.com/1600x900/?menorah,candles,warm-light"
+          onerror="this.onerror=null; this.src='https://picsum.photos/seed/hildesheim-neubeginn/1600/900';"
+          alt="Menora Kerzen"
+          loading="lazy"
+          style="filter: brightness(0.55) saturate(1.1) contrast(1.05);"
+        />
+      </div>
+      <div class="chapter-hero-inner">
+        <div class="chapter-hero-kicker" style="color: #b5d5b7;">Kapitel Zehn</div>
+        <h2 class="chapter-hero-title">Neubeginn<br/><span class="italic">Die Gemeinde heute</span></h2>
+      </div>
+    </div>
     <p class="section-lead reveal">50 Jahre nach der Zerstörung lebt jüdisches Leben in Hildesheim wieder auf — leise, mühsam, aber unwiderruflich. Ein Neuanfang aus dem Nichts.</p>
 
     <div class="rebirth-timeline">
@@ -2569,6 +2841,18 @@ footer {
       <div class="rebirth-item reveal">
         <div class="rebirth-year">10. Nov. 2009</div>
         <p class="rebirth-text">Einweihung der <strong>neuen Synagoge an der Johanniskirche 5</strong> — bewusst am Jahrestag der Pogromnacht. Ein deutliches Zeichen: Wir sind wieder da. 71 Jahre nach der Zerstörung wieder ein sichtbares jüdisches Gotteshaus im Herzen Hildesheims.</p>
+      </div>
+    </div>
+
+    <div class="reveal-3d" style="margin-top: 80px;">
+      <div class="real-photo" style="aspect-ratio: 16/9; max-width: 1000px; margin: 0 auto;">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Neue_Synagoge_Hildesheim.jpg?width=1400"
+          onerror="this.onerror=null; this.src='https://source.unsplash.com/1400x900/?modern,synagogue,germany';"
+          alt="Neue Synagoge Hildesheim, Johanniskirche 5, eingeweiht 2009"
+          loading="lazy"
+        />
+        <div class="real-photo-caption">Die neue Synagoge · Johanniskirche 5 · Eingeweiht am 10. November 2009</div>
       </div>
     </div>
   </div>
