@@ -94,7 +94,7 @@ body {
 @media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
 
 /* ══════════════════════════════════════════════════════
-   LOADER
+   LOADER  — pure CSS, auto-hides after 2.2s, no JS needed
    ══════════════════════════════════════════════════════ */
 .loader {
   position: fixed;
@@ -105,9 +105,15 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  transition: opacity 1s var(--ease-out-expo), visibility 1s;
+  animation: loaderAutoHide 1.4s 1.0s forwards;
+  pointer-events: none;
 }
 .loader.hidden { opacity: 0; visibility: hidden; }
+@keyframes loaderAutoHide {
+  0%   { opacity: 1; visibility: visible; }
+  99%  { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
 .loader-star {
   width: 80px; height: 80px;
   animation: loader-spin 2.5s linear infinite;
@@ -485,30 +491,39 @@ section {
 
 /* ══════════════════════════════════════════════════════
    REVEAL / SCROLL ANIMATIONS
+   Default: visible.  Only when the .js class is on <html>
+   (added by a tiny inline script) do we hide-then-reveal.
+   That way, if JS ever fails, content stays fully visible.
    ══════════════════════════════════════════════════════ */
-.reveal {
-  opacity: 0;
-  transform: translateY(60px);
+.reveal, .reveal-left, .reveal-right, .reveal-3d {
   transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo);
 }
-.reveal.in { opacity: 1; transform: translateY(0); }
-
-.reveal-left  { transform: translateX(-80px); }
-.reveal-right { transform: translateX(80px); }
-.reveal-3d {
+.js .reveal {
+  opacity: 0;
+  transform: translateY(60px);
+}
+.js .reveal-left  { opacity: 0; transform: translateX(-80px); }
+.js .reveal-right { opacity: 0; transform: translateX(80px); }
+.js .reveal-3d {
+  opacity: 0;
   transform: translateY(80px) rotateX(20deg);
   transform-origin: center bottom;
 }
+.reveal.in, .js .reveal.in { opacity: 1; transform: translateY(0); }
 .reveal-left.in,
-.reveal-right.in { transform: translateX(0); }
-.reveal-3d.in { transform: translateY(0) rotateX(0); }
+.reveal-right.in,
+.js .reveal-left.in,
+.js .reveal-right.in { opacity: 1; transform: translateX(0); }
+.reveal-3d.in, .js .reveal-3d.in { opacity: 1; transform: translateY(0) rotateX(0); }
 
 .reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(40px);
   transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
 }
-.reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+.js .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.reveal-stagger.in > *, .js .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
 .reveal-stagger.in > *:nth-child(1) { transition-delay: 0.05s; }
 .reveal-stagger.in > *:nth-child(2) { transition-delay: 0.15s; }
 .reveal-stagger.in > *:nth-child(3) { transition-delay: 0.25s; }
@@ -1510,8 +1525,14 @@ footer {
 <!-- ════════ LOADER ════════ -->
 <div class="loader" id="loader">
   <svg class="loader-star" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="50,5 61,35 92,35 68,55 78,90 50,72 22,90 32,55 8,35 39,35" fill="none" stroke="#c8a15a" stroke-width="1.5" stroke-linejoin="round"/>
-    <polygon points="50,10 60,38 88,38 66,56 74,84 50,68 26,84 34,56 12,38 40,38" fill="none" stroke="#ecd6a5" stroke-width="0.8" stroke-linejoin="round" opacity="0.6"/>
+    <g fill="none" stroke="#c8a15a" stroke-width="2.2" stroke-linejoin="round">
+      <polygon points="50,8 88,74 12,74"/>
+      <polygon points="50,92 12,26 88,26"/>
+    </g>
+    <g fill="none" stroke="#ecd6a5" stroke-width="1.2" stroke-linejoin="round" opacity="0.55">
+      <polygon points="50,16 82,70 18,70"/>
+      <polygon points="50,84 18,30 82,30"/>
+    </g>
   </svg>
   <div class="loader-text">In Memoriam</div>
   <div class="loader-progress"></div>
@@ -1527,7 +1548,7 @@ footer {
 <!-- ════════ NAVIGATION ════════ -->
 <nav id="mainNav">
   <div class="nav-logo">
-    <svg viewBox="0 0 100 100"><polygon points="50,5 61,35 92,35 68,55 78,90 50,72 22,90 32,55 8,35 39,35"/></svg>
+    <svg viewBox="0 0 100 100"><g><polygon points="50,8 88,74 12,74"/><polygon points="50,92 12,26 88,26"/></g></svg>
     <span>Hildesheim · Erinnern</span>
   </div>
   <ul class="nav-links">
@@ -1982,7 +2003,7 @@ footer {
 
     <div class="divider reveal">
       <div class="divider-line"></div>
-      <svg viewBox="0 0 100 100"><polygon points="50,5 61,35 92,35 68,55 78,90 50,72 22,90 32,55 8,35 39,35"/></svg>
+      <svg viewBox="0 0 100 100"><g><polygon points="50,8 88,74 12,74"/><polygon points="50,92 12,26 88,26"/></g></svg>
       <div class="divider-line"></div>
     </div>
 
@@ -2309,7 +2330,7 @@ footer {
 
     <div class="divider reveal">
       <div class="divider-line"></div>
-      <svg viewBox="0 0 100 100" style="fill: var(--gold-dk);"><polygon points="50,5 61,35 92,35 68,55 78,90 50,72 22,90 32,55 8,35 39,35"/></svg>
+      <svg viewBox="0 0 100 100" style="fill: var(--gold-dk);"><g><polygon points="50,8 88,74 12,74"/><polygon points="50,92 12,26 88,26"/></g></svg>
       <div class="divider-line"></div>
     </div>
 
@@ -2727,8 +2748,14 @@ footer {
 <section class="closing" id="abschluss">
   <div class="closing-star">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-      <polygon points="50,5 61,35 92,35 68,55 78,90 50,72 22,90 32,55 8,35 39,35" fill="none" stroke="#c8a15a" stroke-width="1.5" stroke-linejoin="round"/>
-      <polygon points="50,15 58,38 85,38 63,55 72,82 50,68 28,82 37,55 15,38 42,38" fill="none" stroke="#ecd6a5" stroke-width="0.8" opacity="0.5" stroke-linejoin="round"/>
+      <g fill="none" stroke="#c8a15a" stroke-width="2.2" stroke-linejoin="round">
+        <polygon points="50,8 88,74 12,74"/>
+        <polygon points="50,92 12,26 88,26"/>
+      </g>
+      <g fill="none" stroke="#ecd6a5" stroke-width="1" stroke-linejoin="round" opacity="0.5">
+        <polygon points="50,18 80,70 20,70"/>
+        <polygon points="50,82 20,30 80,30"/>
+      </g>
     </svg>
   </div>
   <p class="closing-quote reveal">
@@ -2772,8 +2799,12 @@ footer {
 <!-- ════════ SCRIPTS ════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* Mark that JS is running — enables reveal-animation CSS. */
+try { document.documentElement.classList.add('js'); } catch(e) {}
+
 /* ═══════════════════════════════════════════════════════
    LOADER — hide reliably, even if window.load never fires
+   (CSS also auto-hides it — this is belt+braces)
    ═══════════════════════════════════════════════════════ */
 (function hideLoader() {
   var attempts = 0;
