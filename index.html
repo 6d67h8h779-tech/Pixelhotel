@@ -2773,13 +2773,27 @@ footer {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
-   LOADER
+   LOADER — hide reliably, even if window.load never fires
    ═══════════════════════════════════════════════════════ */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('loader').classList.add('hidden');
-  }, 1600);
-});
+(function hideLoader() {
+  var attempts = 0;
+  function tryHide() {
+    var el = document.getElementById('loader');
+    if (el) {
+      el.classList.add('hidden');
+      // remove from DOM after transition to make sure it can't block clicks
+      setTimeout(function() { if (el && el.parentNode) el.parentNode.removeChild(el); }, 1200);
+    } else if (attempts++ < 30) {
+      setTimeout(tryHide, 100);
+    }
+  }
+  // Fire on multiple triggers so we never miss:
+  setTimeout(tryHide, 1400);
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(tryHide, 1400); });
+  window.addEventListener('load', function() { setTimeout(tryHide, 400); });
+  // Safety net: force-hide after 3s no matter what
+  setTimeout(tryHide, 3000);
+})();
 
 /* ═══════════════════════════════════════════════════════
    CUSTOM CURSOR
@@ -2831,9 +2845,14 @@ window.addEventListener('load', () => {
 })();
 
 /* ═══════════════════════════════════════════════════════
-   REVEAL ON SCROLL (IntersectionObserver)
+   REVEAL ON SCROLL (IntersectionObserver + fallback)
    ═══════════════════════════════════════════════════════ */
 (() => {
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-3d, .reveal-stagger, .timeline-item');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('in'); });
+    return;
+  }
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -2841,8 +2860,12 @@ window.addEventListener('load', () => {
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-3d, .reveal-stagger, .timeline-item').forEach(el => io.observe(el));
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => io.observe(el));
+  // Safety fallback: after 4s, reveal anything still hidden
+  setTimeout(function() {
+    els.forEach(function(el) { if (!el.classList.contains('in')) el.classList.add('in'); });
+  }, 4000);
 })();
 
 /* ═══════════════════════════════════════════════════════
